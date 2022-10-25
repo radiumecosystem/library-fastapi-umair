@@ -38,8 +38,8 @@ async def edit_book_only_admin(book:Book,bookid:int,userid:int):
    else:
       return "only admin can edit book"
       
-@book.delete_only_admin("/deletebook/{userid}/{bookid}")
-async def delete_book(bookid:int,userid:int):
+@book.delete("/deletebook/{userid}/{bookid}")
+async def delete_book_only_admin(bookid:int,userid:int):
    admin = conn.execute(users.select().where(users.c.id==userid)).first().isadmin
    if admin:
      conn.execute(books.delete().where(books.c.id==bookid))
