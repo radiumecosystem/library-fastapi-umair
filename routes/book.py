@@ -13,7 +13,7 @@ async def search_book(bookid):
     return conn.execute(books.select().where(books.c.id==bookid)).first()
 
 @book.post("/addbook/{userid}")
-async def add_book(book:Book,userid:int):
+async def add_book_only_admin(book:Book,userid:int):
    admin = conn.execute(users.select().where(users.c.id==userid)).first().isadmin
    if admin:
       conn.execute(books.insert().values(
@@ -27,7 +27,7 @@ async def add_book(book:Book,userid:int):
      
      
 @book.put("/editbook/{userid}/{bookid}")
-async def edit_book(book:Book,bookid:int,userid:int):
+async def edit_book_only_admin(book:Book,bookid:int,userid:int):
    admin = conn.execute(users.select().where(users.c.id==userid)).first().isadmin
    if admin:
       conn.execute(books.update().values(
@@ -38,7 +38,7 @@ async def edit_book(book:Book,bookid:int,userid:int):
    else:
       return "only admin can edit book"
       
-@book.delete("/deletebook/{userid}/{bookid}")
+@book.delete_only_admin("/deletebook/{userid}/{bookid}")
 async def delete_book(bookid:int,userid:int):
    admin = conn.execute(users.select().where(users.c.id==userid)).first().isadmin
    if admin:
